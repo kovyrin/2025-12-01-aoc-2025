@@ -3,3 +3,5 @@
 source "https://rubygems.org"
 
 gem "activesupport"
+
+gem "rubocop", "~> 1.81"
