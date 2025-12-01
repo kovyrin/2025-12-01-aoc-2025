@@ -12,26 +12,24 @@ class Dial
   end
 
   def turn(command)
+    starting_pos = pos
     direction = command[0]
     steps = command[1..].to_i
 
     # Normalize the number of rotations, each 100 steps lands us in the same spot while producing one 0-click
-    hit_zero = steps.abs / 100
+    @zero_count += steps.abs / 100
     steps = steps.abs % 100
-
-    starting_pos = pos
 
     sign = direction == 'R' ? 1 : -1
     @pos += sign * steps
 
     # Count if we landed on 0
-    hit_zero += 1 if pos.zero?
+    @zero_count += 1 if pos.zero?
 
     # We went through 0
-    hit_zero += 1 if starting_pos != 0 && pos.negative?
-    hit_zero += 1 if pos >= 100
+    @zero_count += 1 if starting_pos != 0 && pos.negative?
+    @zero_count += 1 if pos >= 100
 
-    @zero_count += hit_zero
     @pos %= 100
   end
 end
