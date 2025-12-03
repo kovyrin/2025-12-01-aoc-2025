@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "activesupport"
-
-gem "rubocop", "~> 1.81"
+gem 'activesupport'
+gem 'rake'
+gem 'rubocop', '~> 1.81'
