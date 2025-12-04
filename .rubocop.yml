@@ -6,3 +6,16 @@ Metrics/AbcSize:
 
 Metrics/MethodLength:
   Enabled: False
+
+Metrics/CyclomaticComplexity:
+  Max: 25
+
+
+Metrics/PerceivedComplexity:
+  Max: 25
+
+
+Naming/MethodParameterName:
+  AllowedNames:
+   - x
+   - y
