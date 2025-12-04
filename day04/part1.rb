@@ -4,9 +4,9 @@
 require 'active_support/all'
 
 ROLL = '@'
-
+EMPTY = '.'
 class Map
-  def initialize(data, default = '.')
+  def initialize(data:, default:)
     @data = data
     @default = default
   end
@@ -88,18 +88,22 @@ input_type = ENV['REAL'] ? 'real' : 'test'
 input_file = File.join(__dir__, 'data', "input-#{input_type}.txt")
 
 data = File.readlines(input_file).reject(&:blank?).map(&:strip)
-map = Map.new(data)
+map = Map.new(data:, default: EMPTY)
 
-accessible = 0
+accessible = Set.new
 
-result_map = map.clone
+loop do
+  removed = false
 
-map.each_cell do |x, y|
-  if accessible?(map, x, y)
-    result_map.set(x, y, 'x')
-    accessible += 1
+  map.each_cell do |x, y|
+    next unless accessible?(map, x, y)
+
+    accessible << [x, y]
+    removed = true
+    map.set(x, y, EMPTY)
   end
+
+  break unless removed
 end
 
-puts "Accessible: #{accessible}"
-result_map.print if input_type == 'test'
+puts "Accessible: #{accessible.count}"
