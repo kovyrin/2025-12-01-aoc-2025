@@ -6,10 +6,8 @@ require 'active_support/all'
 def optimize_ranges(ranges)
   max_id = ranges.count - 1
 
-  0.upto(max_id).each do |i1|
-    0.upto(max_id).each do |i2|
-      next if i1 == i2
-
+  0.upto(max_id - 1).each do |i1|
+    (i1 + 1).upto(max_id).each do |i2|
       r1 = ranges[i1]
       r2 = ranges[i2]
       next unless r1.overlap?(r2)
@@ -48,12 +46,5 @@ puts "Ranges left: #{ranges.count}" while optimize_ranges(ranges)
 
 puts "Optimization complete, #{ranges.count} ranges left"
 
-total_fresh = 0
-ranges.each do |range|
-  puts "Add: #{range.count}"
-  total_fresh += range.count
-end
-
+total_fresh = ranges.sum(&:count)
 puts "Total fresh: #{total_fresh}"
-
-# 347468726696961 - solution
