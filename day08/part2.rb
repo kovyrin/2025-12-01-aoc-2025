@@ -41,11 +41,11 @@ points = data.map do |l|
   Point.new(x, y, z)
 end
 
-count = points.count
+point_count = points.count
 distances = []
 
-0.upto(count - 2) do |p1|
-  (p1 + 1).upto(count - 1) do |p2|
+0.upto(point_count - 2) do |p1|
+  (p1 + 1).upto(point_count - 1) do |p2|
     d = points[p1].distance_to(points[p2])
     distances << { p1:, p2:, d: }
   end
@@ -54,7 +54,6 @@ end
 distances.sort_by! { |d| d[:d] }
 
 connections = Hash.new { |hash, key| hash[key] = Set.new }
-
 distances.each do |x|
   p1 = points[x[:p1]]
   p2 = points[x[:p2]]
@@ -63,11 +62,14 @@ distances.each do |x|
   connections[p1] << p2
   connections[p2] << p1
 
+  # Until each point has at least one connection, we don't need to check anything
+  next if connections.keys.count < point_count
+
   # Start from p1 and discover all transitive connections
   connected = discover_connections(connections:, start: p1)
 
   # We stop only on a fully connected graph
-  next unless connected.count == points.count
+  next unless connected.count == point_count
 
   puts "Fully connected by #{p1} <--> #{p2}"
   puts "  x*x = #{p1.x * p2.x}"
