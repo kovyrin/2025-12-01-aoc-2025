@@ -22,7 +22,6 @@ class Point
 end
 
 def paint_cluster(p, cluster, clusters, connections)
-  puts "Painting #{p} with cluster #{cluster}"
   clusters[p] = cluster
 
   # Paint all connected points with the same cluster
@@ -45,26 +44,22 @@ count = points.count
 min_distances = []
 
 0.upto(count - 2) do |p1|
-  puts "Calculating distances from point #{p1}..."
   (p1 + 1).upto(count - 1) do |p2|
     d = points[p1].distance_to(points[p2])
-
-    # Maintain a bottom 10 list of distances
     min_distances << { p1:, p2:, d: }
-    min_distances.sort_by! { |d| d[:d] }
-    min_distances = min_distances[0...min_count]
   end
 end
+
+# Keep lowest N
+min_distances.sort_by! { |d| d[:d] }
+min_distances = min_distances[0...min_count]
 
 connections = Hash.new { |hash, key| hash[key] = Set.new }
 clusters = {}
 
-puts 'Connections:'
 min_distances.each do |x|
   p1 = points[x[:p1]]
   p2 = points[x[:p2]]
-
-  puts " #{p1} <--> #{p2}"
 
   # Create a map of all the connections
   connections[p1] << p2
@@ -74,8 +69,6 @@ min_distances.each do |x|
   clusters[p1] = nil
   clusters[p2] = nil
 end
-
-puts "Clusters: #{clusters.inspect}"
 
 current_cluster = 0
 while clusters.values.any?(&:nil?)
